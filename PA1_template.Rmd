@@ -7,19 +7,44 @@ output:
 
 
 ## Loading and preprocessing the data
-
+x <- read.csv("activity.csv")
 
 
 ## What is mean total number of steps taken per day?
+--create total steps by date
+--average total steps by date
 
+The average number of steps taken per day is ```x```
 
 
 ## What is the average daily activity pattern?
+--create total steps by interval
+--create average steps by interval
+--present chart of average steps by interval
+
+The chart below displays the average daily activity pattern.
+<INSERT CHART>
+
 
 
 
 ## Imputing missing values
+--identify missing values
+summary(x)
+--missing values in steps. is this appropriate? the person may be motionless
+--describe how imputation procedure would be carried out nevertheless
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+--create total steps by weekday, create average steps by weekday
+--create total steps by weekends, create average steps by weekend
+--present raw differences between weekday average and weekend average
+--run ANOVA to test difference
+
+Overall there is/is not a significant difference in the total number of steps between weekdays and weekends. INSERT STATS.
+
+--create average total steps by interval for weekday and weekend
+----present chart of average steps by interval across weekend and weekend
+
+END
