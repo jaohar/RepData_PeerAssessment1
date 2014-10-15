@@ -93,8 +93,12 @@ names(ts_weekday) <- c("TimeInterval", "AvgSteps")
 names(ts_weekend) <- c("TimeInterval", "AvgSteps")
 
 plot(weekday_data$imputedsteps ~ weekday_data$interval, type="l", main="5-Minute Interval Time Series", ylab="Average # Steps", xlab="5-Minute Interval", col="blue")
-par(new=T)
-plot(weekend_data$imputedsteps ~ weekend_data$interval, type="l", main="", ylab="", xlab="",col="red")
 ```
 
-![plot of chunk weekdays_weekends](./PA1_template_files/figure-html/weekdays_weekends.png) 
+![plot of chunk weekdays_weekends](./PA1_template_files/figure-html/weekdays_weekends1.png) 
+
+```r
+plot(weekend_data$imputedsteps ~ weekend_data$interval, type="l", main="5-Minute Interval Time Series", ylab="Average # Steps", xlab="5-Minute Interval", col="red")
+```
+
+![plot of chunk weekdays_weekends](./PA1_template_files/figure-html/weekdays_weekends2.png) 
