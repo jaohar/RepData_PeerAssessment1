@@ -19,7 +19,7 @@ summary(x)
 ##  NA's   :2304    (Other)   :15840
 ```
 
-####What is mean total number of steps taken per day?  
+##What is mean total number of steps taken per day?  
 
 
 ```r
@@ -35,7 +35,7 @@ qplot(ts_bydate$Date, ts_bydate$Steps)
 9354 and the median number of steps taken per day is
 10395.*
 
-####What is the average daily activity pattern?
+##What is the average daily activity pattern?
 
 
 ```r
@@ -50,7 +50,7 @@ qplot(ts_byint$TimeInterval, ts_byint$AvgSteps)
 
 - The chart above displays the average daily activity pattern across 5 minute intervals.
 
-#### Imputing missing values
+## Imputing missing values
 
 The total number of rows with NAs: 2304
 
@@ -92,13 +92,13 @@ ts_weekend <- aggregate(weekend_data$imputedsteps, list(weekend_data$interval), 
 names(ts_weekday) <- c("TimeInterval", "AvgSteps")
 names(ts_weekend) <- c("TimeInterval", "AvgSteps")
 
-plot(weekday_data$imputedsteps ~ weekday_data$interval, type="l", main="5-Minute Interval Time Series", ylab="Average # Steps", xlab="5-Minute Interval", col="blue")
+ggplot(weekday_data, aes(interval, imputedsteps)) + geom_line(colour="blue") + xlab("Interval") + ylab("Average Steps")
 ```
 
 ![plot of chunk weekdays_weekends](./PA1_template_files/figure-html/weekdays_weekends1.png) 
 
 ```r
-plot(weekend_data$imputedsteps ~ weekend_data$interval, type="l", main="5-Minute Interval Time Series", ylab="Average # Steps", xlab="5-Minute Interval", col="red")
+ggplot(weekend_data, aes(interval, imputedsteps)) + geom_line(colour="red") + xlab("Interval") + ylab("Average Steps")
 ```
 
 ![plot of chunk weekdays_weekends](./PA1_template_files/figure-html/weekdays_weekends2.png) 
