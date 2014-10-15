@@ -1,50 +1,77 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
 ---
 
-
-## Loading and preprocessing the data
-x <- read.csv("activity.csv")
-
-
-## What is mean total number of steps taken per day?
---create total steps by date
---average total steps by date
-
-The average number of steps taken per day is ```x```
-
-
-## What is the average daily activity pattern?
---create total steps by interval
---create average steps by interval
---present chart of average steps by interval
-
-The chart below displays the average daily activity pattern.
-<INSERT CHART>
-
-
-
-
-## Imputing missing values
---identify missing values
+- Loading and preprocessing the data
+```{r load_data}
+x <- read.csv(unz("activity.zip", "activity.csv"))
+library(ggplot2)
 summary(x)
---missing values in steps. is this appropriate? the person may be motionless
---describe how imputation procedure would be carried out nevertheless
+```
+
+####What is mean total number of steps taken per day?  
+
+```{r total_steps_by_date}
+#Calc total steps by date
+ts_bydate <- aggregate(x$steps, list(x$date), sum, na.rm=TRUE)
+names(ts_bydate) <- c("Date", "Steps")
+qplot(ts_bydate$Date, ts_bydate$Steps)
+```
+ 
+*The mean number of steps taken per day is
+`r as.integer(mean(ts_bydate$Steps))` and the median number of steps taken per day is
+`r as.integer(median(ts_bydate$Steps))`.*
+
+####What is the average daily activity pattern?
+
+```{r total_steps_by_interval}
+#Calc average steps by interval
+ts_byint <- aggregate(x$steps, list(x$interval), mean, na.rm=TRUE)
+names(ts_byint) <- c("TimeInterval", "AvgSteps")
+#Present histogram of average steps by interval
+qplot(ts_byint$TimeInterval, ts_byint$AvgSteps)
+```
+
+- The chart above displays the average daily activity pattern across 5 minute intervals.
+
+#### Imputing missing values
+
+The total number of rows with NAs: `r sum(is.na(x$steps))`
+
+```{r impute missing data}
+x$intervalmean <- ts_byint$AvgSteps
+x$imputedsteps <- x$steps
+x$imputedsteps[is.na(x$imputedsteps)] <- x$intervalmean
+
+imp_bydate <- aggregate(x$imputedsteps, list(x$date), sum, na.rm=TRUE)
+names(imp_bydate) <- c("Date", "Steps")
+```
+
+*After missing value replacement, the mean number of steps taken per day is
+`r as.integer(mean(imp_bydate$Steps))` and the median number of steps taken per day is
+`r as.integer(median(imp_bydate$Steps))`.*
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
---create total steps by weekday, create average steps by weekday
---create total steps by weekends, create average steps by weekend
---present raw differences between weekday average and weekend average
---run ANOVA to test difference
 
-Overall there is/is not a significant difference in the total number of steps between weekdays and weekends. INSERT STATS.
+```{r weekdays_weekends}
+x$day <- weekdays(as.Date(x$date))
+x$weekday <- ifelse(x$day == "Saturday", "Weekend", ifelse(x$day == "Sunday", "Weekend", "Weekday"))
 
---create average total steps by interval for weekday and weekend
-----present chart of average steps by interval across weekend and weekend
+weekend_data <- subset(x, weekday == "Weekend")
+weekday_data <- subset(x, weekday == "Weekday")
 
-END
+ts_weekday <- aggregate(weekday_data$imputedsteps, list(weekday_data$interval), mean, na.rm=TRUE)
+ts_weekend <- aggregate(weekend_data$imputedsteps, list(weekend_data$interval), mean, na.rm=TRUE)
+names(ts_weekday) <- c("TimeInterval", "AvgSteps")
+names(ts_weekend) <- c("TimeInterval", "AvgSteps")
+
+plot(weekday_data$imputedsteps ~ weekday_data$interval, type="l", main="5-Minute Interval Time Series", ylab="Average # Steps", xlab="5-Minute Interval", col="blue")
+par(new=T)
+plot(weekend_data$imputedsteps ~ weekend_data$interval, type="l", main="", ylab="", xlab="",col="red")
+```
